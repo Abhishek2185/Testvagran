@@ -1,0 +1,54 @@
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+
+public class RecentlyPlayedStore {
+    private int capacity;
+    private Map<String, Queue<String>> store;
+
+    public RecentlyPlayedStore(int capacity) {
+        this.capacity = capacity;
+        this.store = new HashMap<>();
+    }
+
+    public void addSong(String user, String song) {
+        if (!store.containsKey(user)) {
+            store.put(user, new LinkedList<>());
+        }
+
+        Queue<String> songs = store.get(user);
+        songs.add(song);
+
+        if (songs.size() > capacity) {
+            songs.poll();
+        }
+    }
+
+    public void getRecentlyPlayedSongs(String user) {
+        if (!store.containsKey(user)) {
+            System.out.println("No songs found for user: " + user);
+            return;
+        }
+
+        System.out.println("Recently played songs for user: " + user);
+        Queue<String> songs = store.get(user);
+        for (String song : songs) {
+            System.out.println(song);
+        }
+    }
+
+    public static void main(String[] args) {
+        RecentlyPlayedStore store = new RecentlyPlayedStore(3);
+
+        store.addSong("user1", "Song A");
+        store.addSong("user1", "Song B");
+        store.addSong("user1", "Song C");
+        store.addSong("user1", "Song D");
+        store.getRecentlyPlayedSongs("user1");
+
+        store.addSong("user2", "Song X");
+        store.addSong("user2", "Song Y");
+	store.addSong("user2", "Song Z");
+        store.getRecentlyPlayedSongs("user2");
+    }
